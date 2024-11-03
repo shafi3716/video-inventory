@@ -6,7 +6,10 @@ import com.example.video.inventory.management.entity.UserEntity;
 import com.example.video.inventory.management.repository.UserRepository;
 import com.example.video.inventory.management.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     @Override
     public String saveUser(UserRegistrationRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -31,22 +40,28 @@ public class UserServiceImpl implements UserService {
         UserEntity user = UserEntity.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(request.getRole().name())
                 .build();
 
         userRepository.save(user);
-        return jwtUtil.generateToken(user.getUsername(), user.getRole());
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
+        return jwtUtil.generateToken(userDetails);
     }
 
     @Override
     public String login(UserLoginRequest request) {
-        UserEntity user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+
+        if (!passwordEncoder.matches(request.getPassword(), userDetails.getPassword())) {
             throw new RuntimeException("Invalid username or password.");
         }
 
-        return jwtUtil.generateToken(user.getUsername(), user.getRole());
+        return jwtUtil.generateToken(userDetails);
     }
 }

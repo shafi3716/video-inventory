@@ -22,10 +22,10 @@ public class VideoEntity {
 
     private String description;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "video_url", nullable = false, length = 255)
     private String videoUrl;
 
     @ManyToOne
-    @JoinColumn(name = "assignedToUserId", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "assigned_to_user_id", referencedColumnName = "id", nullable = false)
     private UserEntity assignedToUser;
 }

@@ -3,11 +3,9 @@ package com.example.video.inventory.management.controller;
 import com.example.video.inventory.management.dto.request.UserLoginRequest;
 import com.example.video.inventory.management.dto.request.UserRegistrationRequest;
 import com.example.video.inventory.management.dto.response.AuthResponse;
-import com.example.video.inventory.management.entity.UserEntity;
 import com.example.video.inventory.management.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginRequest request) {
+    public ResponseEntity<?> loginUser(@Valid @RequestBody UserLoginRequest request) {
         String token = userService.login(request);
         AuthResponse response = AuthResponse.builder()
                 .message("User login successfully.")

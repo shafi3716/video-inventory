@@ -1,5 +1,6 @@
 package com.example.video.inventory.management.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,6 +27,7 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false, length = 255)
     private String password;
 

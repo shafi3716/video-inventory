@@ -20,11 +20,11 @@ public class ActivityLogEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "userId", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "videoId", nullable = false)
+    @JoinColumn(name = "video_id", nullable = false)
     private VideoEntity video;
 
     @Column(nullable = false, length = 20)
