@@ -8,8 +8,6 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,5 +68,13 @@ public class VideoController {
     public ResponseEntity<?> deleteVideo(@PathVariable Long id) throws IOException {
         videoService.unlinkVideo(id);
         return ResponseEntity.ok("Video deleted successfully.");
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/assign")
+    public ResponseEntity<?> assignVideo(@PathVariable Long id,
+                                         @NotBlank @RequestParam("assignedToUserId") String assignedToUserId) {
+        videoService.assignVideoToUser(id, assignedToUserId);
+        return ResponseEntity.ok("Video assigned successfully.");
     }
 }

@@ -15,4 +15,6 @@ public interface VideoService {
     void updateVideo(Long id, MultipartFile videoFile, UploadVideoRequest request) throws IOException;
 
     void unlinkVideo(Long id) throws IOException;
+
+    void assignVideoToUser(Long id, String assignedToUserId);
 }

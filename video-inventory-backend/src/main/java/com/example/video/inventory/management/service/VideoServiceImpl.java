@@ -4,6 +4,7 @@ import com.example.video.inventory.management.config.FileUploadConfig;
 import com.example.video.inventory.management.dto.request.UploadVideoRequest;
 import com.example.video.inventory.management.entity.UserEntity;
 import com.example.video.inventory.management.entity.VideoEntity;
+import com.example.video.inventory.management.exception.ResourceNotFoundException;
 import com.example.video.inventory.management.repository.UserRepository;
 import com.example.video.inventory.management.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class VideoServiceImpl implements VideoService {
         String videoUrl = saveVideo(videoFile);
 
         UserEntity user = userRepository.findById(Long.valueOf(request.getAssignedToUserId()))
-                .orElseThrow(() -> new RuntimeException("User with ID " + request.getAssignedToUserId() + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + request.getAssignedToUserId() + " not found"));
 
         VideoEntity videoEntity = VideoEntity.builder()
                 .title(request.getTitle())
@@ -76,7 +77,7 @@ public class VideoServiceImpl implements VideoService {
             videos = videoRepository.findAll();
         } else if (role.equalsIgnoreCase("ROLE_USER")) {
             UserEntity user = userRepository.findById(userId)
-                    .orElseThrow(() -> new RuntimeException("User with ID " + userId + " not found"));
+                    .orElseThrow(() -> new ResourceNotFoundException("User with ID " + userId + " not found"));
             videos = videoRepository.findAllByAssignedToUser(user);
         }
         return videos;
@@ -86,7 +87,7 @@ public class VideoServiceImpl implements VideoService {
     public void updateVideo(Long videoId, MultipartFile videoFile, UploadVideoRequest request) throws IOException {
 
         VideoEntity existingVideo = videoRepository.findById(videoId)
-                .orElseThrow(() -> new RuntimeException("Video not found with id: " + videoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Video not found with id: " + videoId));
 
         // unlink a file
         Path videoFilePath = fileUploadConfig.getUploadDir().resolve(existingVideo.getVideoUrl().substring(1));
@@ -103,11 +104,24 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public void unlinkVideo(Long videoId) throws IOException {
         VideoEntity videoEntity = videoRepository.findById(videoId)
-                .orElseThrow(() -> new RuntimeException("Video with ID " + videoId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Video with ID " + videoId + " not found"));
 
         Path videoFilePath = fileUploadConfig.getUploadDir().resolve(videoEntity.getVideoUrl().substring(1));
         Files.deleteIfExists(videoFilePath);
         videoRepository.delete(videoEntity);
+    }
+
+    @Override
+    public void assignVideoToUser(Long videoId, String assignedToUserId) {
+        VideoEntity videoEntity = videoRepository.findById(videoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Video with ID " + videoId + " not found"));
+
+        UserEntity userEntity = userRepository.findById(Long.valueOf(assignedToUserId))
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + assignedToUserId + " not found"));
+
+        videoEntity.setAssignedToUser(userEntity);
+
+        videoRepository.save(videoEntity);
     }
 
     private String getLoginRole() {
