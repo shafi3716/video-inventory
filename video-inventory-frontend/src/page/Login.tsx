@@ -76,6 +76,7 @@ const Login = () => {
           >
             Login
           </button>
+          <a href="/register" className="flex justify-end text-blue-500">Create a new user</a>
         </form>
       </div>
     </div>

@@ -13,7 +13,7 @@ const App: React.FC = () => {
       <div>
         <Routes>
           <Route path="/" element={<AuthRedirect><Login /></AuthRedirect>} />
-          <Route path="/register" element={<ProtectedRoute><Register /> </ProtectedRoute>} />
+          <Route path="/register" element={<AuthRedirect><Register /> </AuthRedirect>} />
           <Route path="/admin" element={<ProtectedRoute><Admin /> </ProtectedRoute>} />
           <Route path="/user" element={<ProtectedRoute><User /> </ProtectedRoute>} />
         </Routes>
