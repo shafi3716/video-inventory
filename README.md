@@ -8,7 +8,7 @@ Required version and services:
 4. Mysql setup: Please make sure you have a MySQL with updated credentials.
    ![image](https://github.com/user-attachments/assets/7214b665-5bce-4eda-9c87-b87f5a118dad)
 
-   DDL will be obtained from ddl-query folder and please execute in your database or I am adding the full database backend on ddl-query folder.
+   DDL will be obtained from ddl-query folder and please execute in your database or I added the full database backend to ddl-query folder.
    ![image](https://github.com/user-attachments/assets/b3a291f3-aa76-4381-8572-bbbed752d735)
    ![image](https://github.com/user-attachments/assets/1ef73e9f-90ea-4b32-988d-2236d1519190)
 6. Backend application running port: 
@@ -28,5 +28,5 @@ Frontend:
 5. npm run start (for running react application on port 3000)
 6. npm run build (if required to build the application)
 
-I will add a video demo of my development video inventory project in the root directory please check the video attachment.
+I added a video demo of my development video inventory project in the root directory please check the video attachment.
 
