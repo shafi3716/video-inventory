@@ -100,14 +100,18 @@ public class VideoServiceImpl implements VideoService {
         VideoEntity existingVideo = videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Video not found with id: " + videoId));
 
+        UserEntity userEntity = userRepository.findById(Long.valueOf(request.getAssignedToUserId()))
+                .orElseThrow(() -> new ResourceNotFoundException("User with ID " + request.getAssignedToUserId() + " not found"));
+
         // unlink a file
-        Path videoFilePath = fileUploadConfig.getUploadDir().resolve(existingVideo.getVideoUrl().substring(1));
-        Files.deleteIfExists(videoFilePath);
-        String videoUrl = saveVideo(videoFile);
+//        Path videoFilePath = fileUploadConfig.getUploadDir().resolve(existingVideo.getVideoUrl().substring(1));
+//        Files.deleteIfExists(videoFilePath);
+//        String videoUrl = saveVideo(videoFile);
 
         existingVideo.setTitle(request.getTitle());
         existingVideo.setDescription(request.getDescription());
-        existingVideo.setVideoUrl(videoUrl);
+        existingVideo.setAssignedToUser(userEntity);
+//        existingVideo.setVideoUrl(videoUrl);
 
         videoRepository.save(existingVideo);
     }

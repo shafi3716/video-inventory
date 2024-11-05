@@ -1,37 +1,20 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
-import api from '../helpers/api';
 import LocalStorageService from '../helpers/LocalStorageService';
+import api from '../helpers/api';
 
 interface Props {
-  addNewCallback: () => void
+  addNewCallback: () => void,
+  users: any
 }
 
-const VideoAddForm = ({addNewCallback}:Props) => {
-    const [users, setUsers] = useState<any>(null);
+const VideoAddForm = ({addNewCallback, users}:Props) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [videoFile, setVideoFile] = useState(null);
     const [assignedToUserId, setAssignedToUserId] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-
-
-    useEffect(() => {
-        api.get('/videos/get-users', {
-              headers: {
-                'Authorization': `Bearer ${LocalStorageService.getToken()}`
-              }
-            })
-            .then(response => {
-              console.log(response.data);
-              setUsers(response.data)
-            })
-            .catch(error => {
-              console.error("There was an error!", error);
-            });
-    },[])
 
     const handleFileChange = (e: any) => {
         setVideoFile(e.target.files[0]);
@@ -52,7 +35,7 @@ const VideoAddForm = ({addNewCallback}:Props) => {
         formData.append('assignedToUserId', assignedToUserId);
 
         try {
-            const response = await axios.post('http://localhost:8001/api/videos', formData, {
+            const response = await api.post('/videos', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${LocalStorageService.getToken()}`

@@ -6,7 +6,7 @@ import LocalStorageService from "../helpers/LocalStorageService";
 
 const Register = () => {
 
-   const auth = useAuth();
+  const auth = useAuth();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -14,13 +14,15 @@ const Register = () => {
 
     const username = formData.get("username") as string;
     const password = formData.get("password") as string;
+    const role = formData.get("role") as string;
 
     const payload = {
       username,
-      password
+      password,
+      role
     }   
 
-    api.post('/auth/login', payload)
+    api.post('/auth/register', payload)
     .then(response => {
       console.log(response.data);
       LocalStorageService.setToken(response.data.token);
@@ -38,6 +40,16 @@ const Register = () => {
       toast.error("There was an error! " + error?.response?.data?.message);
     });
   };
+
+  const roles = [
+    {
+      value: "ROLE_ADMIN",
+      name: "Admin"
+    },{
+      value: "ROLE_USER",
+      name: "User"
+    }
+  ]
   
   return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -70,6 +82,24 @@ const Register = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="Enter your password"
             />
+          </div>
+          <div>
+            <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-700">
+              Role
+            </label>
+            <select
+                id="role"
+                name="role"
+                required
+                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring focus:ring-indigo-200"
+            >
+                <option value="" disabled>Select a user</option>
+                {roles?.map((user: any) => (
+                    <option key={user.value} value={user.value}>
+                        {user.name}
+                    </option>
+                ))}
+            </select>
           </div>
           <button
             type="submit"
