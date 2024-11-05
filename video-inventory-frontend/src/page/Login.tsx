@@ -1,9 +1,41 @@
+import toast from "react-hot-toast";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
+import api from "../helpers/api";
+import LocalStorageService from "../helpers/LocalStorageService";
 
 const Login = () => {
+  const auth = useAuth();
 
-   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Add your login logic here
+    const formData = new FormData(event.currentTarget);
+
+    const username = formData.get("username") as string;
+    const password = formData.get("password") as string;
+
+    const payload = {
+      username,
+      password
+    }   
+
+    api.post('/auth/login', payload)
+    .then(response => {
+      console.log(response.data);
+      LocalStorageService.setToken(response.data.token);
+      const token = LocalStorageService.getTokenInfo(response.data.token)
+      auth?.setIsAuthenticated(true);
+      toast.success('Login successfully');
+      if(token?.roles[0] === "ROLE_ADMIN"){
+        return <Navigate to="/admin" replace />;
+      } else if(token?.roles[0] === "ROLE_USER"){
+        return <Navigate to="/user" replace />;
+      }
+    })
+    .catch(error => {
+      console.error("There was an error!", error);
+      toast.error("There was an error! " + error?.response?.data?.message);
+    });
   };
 
   return (
@@ -32,6 +64,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
+              min={6}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
               placeholder="Enter your password"

@@ -3,6 +3,8 @@ package com.example.video.inventory.management.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 public class ActivityRequest {
     @NotBlank
@@ -11,4 +13,6 @@ public class ActivityRequest {
     private String userId;
     @NotBlank
     private String videoId;
+
+    private LocalDateTime timestamp;
 }

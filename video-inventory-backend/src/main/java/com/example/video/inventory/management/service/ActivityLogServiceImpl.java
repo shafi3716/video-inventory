@@ -11,7 +11,6 @@ import com.example.video.inventory.management.repository.VideoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -43,7 +42,7 @@ public class ActivityLogServiceImpl implements ActivityLogService {
                 .action(request.getAction())
                 .user(userEntity)
                 .video(videoEntity)
-                .timestamp(LocalDateTime.now())
+                .timestamp(request.getTimestamp())
                 .build();
         activityLogRepository.save(log);
     }

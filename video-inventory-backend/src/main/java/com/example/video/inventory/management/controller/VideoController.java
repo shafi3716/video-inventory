@@ -1,7 +1,9 @@
 package com.example.video.inventory.management.controller;
 
 import com.example.video.inventory.management.dto.request.UploadVideoRequest;
+import com.example.video.inventory.management.entity.UserEntity;
 import com.example.video.inventory.management.entity.VideoEntity;
+import com.example.video.inventory.management.service.UserService;
 import com.example.video.inventory.management.service.VideoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -21,12 +23,15 @@ public class VideoController {
     @Autowired
     private VideoService videoService;
 
+    @Autowired
+    private UserService userService;
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<?> uploadVideo(@Valid @NotBlank @RequestParam("title") String title,
+    public ResponseEntity<?> uploadVideo(@Valid @RequestParam("title") String title,
                                          @RequestParam(value = "description", required = false) String description,
-                                         @NotBlank @RequestParam("videoFile") MultipartFile videoFile,
-                                         @NotBlank @RequestParam("assignedToUserId") String assignedToUserId) throws IOException {
+                                         @RequestParam("videoFile") MultipartFile videoFile,
+                                         @RequestParam("assignedToUserId") String assignedToUserId) throws IOException {
 
         UploadVideoRequest request = UploadVideoRequest.builder()
                 .title(title)
@@ -40,8 +45,8 @@ public class VideoController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("")
-    public ResponseEntity<List<VideoEntity>> getAllVideos(@RequestParam(value = "userId", required = false) String userId) {
-        List<VideoEntity> videos = videoService.getAllVideos(Long.valueOf(userId));
+    public ResponseEntity<List<VideoEntity>> getAllVideos() {
+        List<VideoEntity> videos = videoService.getAllVideos();
         return ResponseEntity.ok(videos);
     }
 
@@ -76,5 +81,12 @@ public class VideoController {
                                          @NotBlank @RequestParam("assignedToUserId") String assignedToUserId) {
         videoService.assignVideoToUser(id, assignedToUserId);
         return ResponseEntity.ok("Video assigned successfully.");
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-users")
+    public ResponseEntity<List<UserEntity>> getUserList() {
+        List<UserEntity> userList = userService.getUserList();
+        return ResponseEntity.ok(userList);
     }
 }

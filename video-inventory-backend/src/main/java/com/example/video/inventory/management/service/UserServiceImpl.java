@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -64,5 +66,10 @@ public class UserServiceImpl implements UserService {
         }
 
         return jwtUtil.generateToken(userDetails);
+    }
+
+    @Override
+    public List<UserEntity> getUserList() {
+        return userRepository.findAllByRole("ROLE_USER");
     }
 }

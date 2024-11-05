@@ -10,7 +10,7 @@ import java.util.List;
 public interface VideoService {
     void uploadVideo(MultipartFile videoFile, UploadVideoRequest request) throws IOException;
 
-    List<VideoEntity> getAllVideos(Long userId);
+    List<VideoEntity> getAllVideos();
 
     void updateVideo(Long id, MultipartFile videoFile, UploadVideoRequest request) throws IOException;
 

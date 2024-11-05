@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,21 +67,31 @@ public class VideoServiceImpl implements VideoService {
 
         Path filePath = uploadDir.resolve(fileName);
         Files.copy(videoFile.getInputStream(), filePath);
-        return "/uploads/" + fileName;
+        return fileName;
     }
 
     @Override
-    public List<VideoEntity> getAllVideos(Long userId) {
+    public List<VideoEntity> getAllVideos() {
         List<VideoEntity> videos = null;
         String role = getLoginRole();
         if (role.equalsIgnoreCase("ROLE_ADMIN")) {
             videos = videoRepository.findAll();
         } else if (role.equalsIgnoreCase("ROLE_USER")) {
-            UserEntity user = userRepository.findById(userId)
-                    .orElseThrow(() -> new ResourceNotFoundException("User with ID " + userId + " not found"));
+            UserDetails userDetails = getCurrentUserDetails();
+            assert userDetails != null;
+            UserEntity user = userRepository.findByUsername(userDetails.getUsername())
+                    .orElseThrow(() -> new ResourceNotFoundException("User with username " + userDetails.getUsername() + " not found"));
             videos = videoRepository.findAllByAssignedToUser(user);
         }
         return videos;
+    }
+
+    private UserDetails getCurrentUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            return (UserDetails) authentication.getPrincipal();
+        }
+        return null;
     }
 
     @Override
