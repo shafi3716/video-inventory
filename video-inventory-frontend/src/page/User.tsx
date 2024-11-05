@@ -6,7 +6,6 @@ import LocalStorageService from "../helpers/LocalStorageService";
 
 const User = () => {
   const [videos, setVideos] = useState<any>([]);
-  const [refresh, setRefresh] = useState<boolean>(false);
 
   useEffect(() => {
     const token = LocalStorageService.getTokenInfo()
@@ -24,7 +23,7 @@ const User = () => {
     .catch(error => {
       console.error("There was an error!", error);
     });
-  },[refresh])
+  },[])
 
   return (
     <div>

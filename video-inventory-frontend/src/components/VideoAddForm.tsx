@@ -35,7 +35,7 @@ const VideoAddForm = ({addNewCallback, users}:Props) => {
         formData.append('assignedToUserId', assignedToUserId);
 
         try {
-            const response = await api.post('/videos', formData, {
+            await api.post('/videos', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${LocalStorageService.getToken()}`
