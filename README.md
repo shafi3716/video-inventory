@@ -24,5 +24,9 @@ Frontend:
 2. React JS version latest 18.3.12
 3. .Env file configuration in the following make sure your backend runs on port 8001.
 ![image](https://github.com/user-attachments/assets/694154fa-ada4-4409-8f0d-9aec1fe10a7e)
-4. 
+4. npm install (fetch all packages on local)
+5. npm run start (for running react application on port 3000)
+6. npm run build (if required to build the application)
+
+I will add a video demo of my development video inventory project in the root directory please check the video attachment.
 
