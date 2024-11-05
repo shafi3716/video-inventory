@@ -44,7 +44,7 @@ const User = () => {
               ))}
             </div>
              {
-                videos.length === 0 && <h1 className="flex justify-center">Not Video Found</h1>
+                videos.length === 0 && <h1 className="flex justify-center">No Video Found</h1>
               }
         </div>
       </div>
