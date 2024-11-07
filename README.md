@@ -2,10 +2,11 @@ Backend:
 
 Required version and services:
 1. Java 17
-2. spring boot version: 3.3.5
-3. I'm using the latest Gradle version 8.12.2
+2. Make sure your intellij idea has a Lombok package.
+3. spring boot version: 3.3.5
+4. I'm using the latest Gradle version 8.12.2
    ![image](https://github.com/user-attachments/assets/c3485233-ff88-4ca7-b0c3-923db8306f5d)
-4. Mysql setup: Please make sure you have a MySQL with updated credentials.
+5. Mysql setup: Please make sure you have a MySQL with updated credentials.
    ![image](https://github.com/user-attachments/assets/7214b665-5bce-4eda-9c87-b87f5a118dad)
 
    DDL will be obtained from ddl-query folder and please execute in your database or I added the full database backend to ddl-query folder.
