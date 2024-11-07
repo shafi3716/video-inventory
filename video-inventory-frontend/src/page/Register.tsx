@@ -2,7 +2,7 @@
  * @Author: Abdullah Al Shafi
  * @Date:   2024-11-04 00:44:47
  * @Last Modified by:   Abdullah Al Shafi
- * @Last Modified time: 2024-11-07 17:24:20
+ * @Last Modified time: 2024-11-07 17:29:56
  */
 import toast from "react-hot-toast";
 import {Navigate} from "react-router-dom";
@@ -35,7 +35,7 @@ const Register = () => {
                     response.data.token
                 );
                 auth?.setIsAuthenticated(true);
-                toast.success("Login successfully");
+                toast.success("Registration successfully");
                 if (token?.roles[0] === "ROLE_ADMIN") {
                     return <Navigate to='/admin' replace />;
                 } else if (token?.roles[0] === "ROLE_USER") {
